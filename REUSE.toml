@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "cake-vectory"
+SPDX-PackageSupplier = "Cake AI Technologies, Inc."
+SPDX-PackageDownloadLocation = "https://github.com/kflow-ai/cake-vectory"
+
+[[annotations]]
+path = [".env.example", ".gitignore", "uv.lock"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Cake AI Technologies, Inc."
+SPDX-License-Identifier = "Apache-2.0"
