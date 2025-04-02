@@ -26,8 +26,8 @@ A modern command-line interface for interacting with vector databases.
 This project uses `uv` as the package manager. To install:
 
 ```bash
-# Install the CLI as a tool
-uv tool install git+https://github.com/kflow-ai/cake-vectory.git
+# Install as a tool
+uv tool install .
 
 # Now you can run the CLI directly
 vectory --help
@@ -35,25 +35,23 @@ vectory --help
 cake-vectory --help
 ```
 
-### Installing as a Global Tool
-
-To install the CLI as a global tool that you can run directly:
-
-```bash
-# Install the package in development mode
-uv pip install -e .
-
-# Now you can run the CLI directly
-vectory --help
-# Or use the full name
-cake-vectory --help
-```
-
-### Uninstall
+### Uninstallation
 
 ```bash
 # Uninstall the CLI
 uv tool uninstall cake-vectory
+```
+
+### Development Mode
+
+During development, you can run the CLI without installing it:
+
+```bash
+# Run directly with uv
+uv run cake_vectory/main.py --help
+
+# Example: List collections
+uv run cake_vectory/main.py collection list
 ```
 
 ## Configuration
