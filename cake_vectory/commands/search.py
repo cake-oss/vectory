@@ -106,7 +106,10 @@ def search_hybrid(
     alpha: float = typer.Option(0.5, "--alpha", "-a", help="Balance between vector and keyword search (0.0-1.0)"),
     limit: int = typer.Option(10, "--limit", "-l", help="Maximum number of results to return"),
     tenant: Optional[str] = typer.Option(None, "--tenant", "-t", help="Tenant name for multi-tenant collections"),
-    filter_json: Optional[str] = typer.Option(None, "--filter", "-f", help="JSON string with filter criteria")
+    filter_json: Optional[str] = typer.Option(None, "--filter", "-f", help="JSON string with filter criteria"),
+    vector_file: Optional[str] = typer.Option(None, "--vector-file", help="Path to a JSON file containing a vector to use instead of generating one from the query text"),
+    fusion_type: str = typer.Option("rankedFusion", "--fusion-type", help="Type of fusion to use (rankedFusion or relativeScoreFusion)"),
+    properties: Optional[str] = typer.Option(None, "--properties", "-p", help="Comma-separated list of properties to search in (e.g., 'title,description' or 'title^3,description')")
 ):
     """Search for objects using hybrid search (vector + keyword)."""
     api = WeaviateAPI()
@@ -121,7 +124,34 @@ def search_hybrid(
             console.print(f"❌ Error parsing filter JSON: [bold red]{str(e)}[/bold red]")
             return
     
-    console.print(f"🔍 Hybrid searching in collection [bold]{collection_name}[/bold] for: [bold]{query}[/bold] (alpha={alpha})...")
+    # Parse properties if provided
+    props_list = None
+    if properties:
+        props_list = [p.strip() for p in properties.split(',')]
+        console.print(f"[dim]Searching in properties: {', '.join(props_list)}[/dim]")
+    
+    # Load vector from file if provided
+    vector = None
+    if vector_file:
+        try:
+            with open(vector_file, 'r') as f:
+                vector_data = json.load(f)
+                if isinstance(vector_data, list):
+                    vector = vector_data
+                else:
+                    console.print(f"❌ Error: Vector file must contain a JSON array of numbers")
+                    return
+            console.print(f"✅ Loaded vector with [bold]{len(vector)}[/bold] dimensions from file")
+        except Exception as e:
+            console.print(f"❌ Error loading vector file: [bold red]{str(e)}[/bold red]")
+            return
+    
+    # Validate fusion type
+    if fusion_type not in ["rankedFusion", "relativeScoreFusion"]:
+        console.print(f"❌ Error: fusion_type must be either 'rankedFusion' or 'relativeScoreFusion'")
+        return
+    
+    console.print(f"🔍 Hybrid searching in collection [bold]{collection_name}[/bold] for: [bold]{query}[/bold] (alpha={alpha}, fusion={fusion_type})...")
     
     try:
         # Perform the hybrid search
@@ -131,7 +161,10 @@ def search_hybrid(
             alpha=alpha,
             limit=limit,
             tenant=tenant,
-            filter_obj=filter_obj
+            filter_obj=filter_obj,
+            vector=vector,
+            fusion_type=fusion_type,
+            properties=props_list
         )
         
         objects = results.get("objects", [])

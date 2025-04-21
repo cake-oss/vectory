@@ -41,7 +41,8 @@ class SearchClient(ObjectsClient):
         query_text: Optional[str] = None,
         limit: int = 10,
         tenant: Optional[str] = None,
-        filter_obj: Optional[Dict[str, Any]] = None
+        filter_obj: Optional[Dict[str, Any]] = None,
+        vector: Optional[List[float]] = None
     ) -> Dict[str, Any]:
         """Search for objects using GraphQL.
         
@@ -51,63 +52,73 @@ class SearchClient(ObjectsClient):
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
             filter_obj: Optional filter criteria
+            vector: Optional vector to use instead of generating one from query text
             
         Returns:
             Dict: Search results
         """
-        # Check if collection has a vectorizer
-        has_vectorizer = self.has_vectorizer(class_name)
-        console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
-        
-        # For collections without vectorizers, we need to use a different approach
-        if not has_vectorizer and query_text:
-            console.print(f"[dim]DEBUG: Using direct text search for collection without vectorizer[/dim]")
+        # If vector is provided, we skip the vectorizer check
+        if vector is not None:
+            console.print(f"[dim]DEBUG: Using provided vector for search[/dim]")
+        else:
+            # Check if collection has a vectorizer
+            has_vectorizer = self.has_vectorizer(class_name)
+            console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
             
-            # For collections without vectorizers, just list all objects and filter client-side
-            console.print(f"[dim]DEBUG: Listing all objects and filtering client-side[/dim]")
-            
-            # Get all objects
-            objects_response = self.get_objects(class_name, limit=100)
-            
-            # Filter objects client-side
-            results = {"objects": []}
-            
-            if "objects" in objects_response:
-                for obj in objects_response["objects"]:
-                    # Check if the query text is in any of the object's properties
-                    properties = obj.get("properties", {})
-                    text = properties.get("text", "").lower()
-                    metadata_str = properties.get("metadata_str", "").lower()
-                    
-                    if query_text.lower() in text or query_text.lower() in metadata_str:
-                        # Format object data
-                        formatted_obj = {
-                            "id": obj.get("id", ""),
-                            "properties": properties,
-                            "additional": {
-                                "score": 1.0  # Default score
-                            }
-                        }
+            # For collections without vectorizers, we need to use a different approach
+            if not has_vectorizer and query_text:
+                console.print(f"[dim]DEBUG: Using direct text search for collection without vectorizer[/dim]")
+                
+                # For collections without vectorizers, just list all objects and filter client-side
+                console.print(f"[dim]DEBUG: Listing all objects and filtering client-side[/dim]")
+                
+                # Get all objects
+                objects_response = self.get_objects(class_name, limit=100)
+                
+                # Filter objects client-side
+                results = {"objects": []}
+                
+                if "objects" in objects_response:
+                    for obj in objects_response["objects"]:
+                        # Check if the query text is in any of the object's properties
+                        properties = obj.get("properties", {})
+                        text = properties.get("text", "").lower()
+                        metadata_str = properties.get("metadata_str", "").lower()
                         
-                        results["objects"].append(formatted_obj)
-            
-            # Sort results by relevance (simple exact match scoring)
-            results["objects"].sort(
-                key=lambda obj: (
-                    1 if query_text.lower() in obj["properties"].get("text", "").lower() else 0,
-                    1 if query_text.lower() in obj["properties"].get("metadata_str", "").lower() else 0
-                ),
-                reverse=True
-            )
-            
-            # Apply limit
-            results["objects"] = results["objects"][:limit]
-            
-            return results
+                        if query_text.lower() in text or query_text.lower() in metadata_str:
+                            # Format object data
+                            formatted_obj = {
+                                "id": obj.get("id", ""),
+                                "properties": properties,
+                                "additional": {
+                                    "score": 1.0  # Default score
+                                }
+                            }
+                            
+                            results["objects"].append(formatted_obj)
+                
+                # Sort results by relevance (simple exact match scoring)
+                results["objects"].sort(
+                    key=lambda obj: (
+                        1 if query_text.lower() in obj["properties"].get("text", "").lower() else 0,
+                        1 if query_text.lower() in obj["properties"].get("metadata_str", "").lower() else 0
+                    ),
+                    reverse=True
+                )
+                
+                # Apply limit
+                results["objects"] = results["objects"][:limit]
+                
+                return results
         
-        # For collections with vectorizers, use the standard approach
+        # Construct the appropriate search clause
         search_clause = ""
-        if query_text:
+        if vector is not None:
+            # Use nearVector with the provided vector
+            search_clause = f'nearVector: {{ vector: {json.dumps(vector)} }}'
+        elif query_text:
+            # If no vector is provided, use the standard approach based on vectorizer
+            has_vectorizer = self.has_vectorizer(class_name)
             if has_vectorizer:
                 # Use nearText for collections with vectorizers
                 search_clause = f'nearText: {{ concepts: ["{query_text}"] }}'
@@ -169,7 +180,10 @@ class SearchClient(ObjectsClient):
         alpha: float = 0.5,
         limit: int = 10,
         tenant: Optional[str] = None,
-        filter_obj: Optional[Dict[str, Any]] = None
+        filter_obj: Optional[Dict[str, Any]] = None,
+        vector: Optional[List[float]] = None,
+        fusion_type: str = "rankedFusion",
+        properties: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """Search for objects using hybrid search (vector + keyword).
         
@@ -180,25 +194,58 @@ class SearchClient(ObjectsClient):
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
             filter_obj: Optional filter criteria
+            vector: Optional vector to use instead of generating one from query text
+            fusion_type: Type of fusion to use (rankedFusion or relativeScoreFusion)
+            properties: Optional list of properties to search in
             
         Returns:
             Dict: Search results
         """
-        # Check if collection has a vectorizer
-        has_vectorizer = self.has_vectorizer(class_name)
-        console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
+        # If vector is provided, we don't need to check for a vectorizer
+        # as we'll use the provided vector directly
+        if vector is not None:
+            console.print(f"[dim]DEBUG: Using provided vector for hybrid search[/dim]")
+        else:
+            # Check if collection has a vectorizer
+            has_vectorizer = self.has_vectorizer(class_name)
+            console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
+            
+            # For collections without vectorizers, use the same approach as text search
+            if not has_vectorizer:
+                console.print(f"[dim]DEBUG: Using text search for hybrid search in collection without vectorizer[/dim]")
+                return self.search_objects(class_name, query, limit, tenant, filter_obj)
         
-        # For collections without vectorizers, use the same approach as text search
-        if not has_vectorizer:
-            console.print(f"[dim]DEBUG: Using text search for hybrid search in collection without vectorizer[/dim]")
-            return self.search_objects(class_name, query, limit, tenant, filter_obj)
+        # Construct GraphQL query with hybrid operator
+        # Build hybrid parameters
+        hybrid_params = {
+            "query": query,
+            "alpha": alpha,
+            "fusionType": fusion_type
+        }
         
-        # For collections with vectorizers, use the standard approach
-        # Construct GraphQL query
+        # Add vector if provided
+        if vector is not None:
+            hybrid_params["vector"] = vector
+        
+        # Add properties if provided
+        if properties is not None and len(properties) > 0:
+            hybrid_params["properties"] = properties
+        
+        # Construct the search clause
+        hybrid_params_str = ""
+        for key, value in hybrid_params.items():
+            if key == "query":
+                hybrid_params_str += f"\n              {key}: \"{value}\""
+            elif key == "alpha" or key == "fusionType":
+                hybrid_params_str += f"\n              {key}: {value}"
+            elif key == "vector":
+                hybrid_params_str += f"\n              {key}: {json.dumps(value)}"
+            elif key == "properties":
+                properties_str = json.dumps(value)
+                hybrid_params_str += f"\n              {key}: {properties_str}"
+        
         search_clause = f"""
-        hybrid: {{
-          query: "{query}"
-          alpha: {alpha}
+        hybrid: {{{hybrid_params_str}
         }}
         """
         
