@@ -20,7 +20,7 @@ def health(ctx: typer.Context):
     """Check if the vector database is live and ready."""
     if ctx.invoked_subcommand is not None:
         return
-    
+
     # Show both live and ready status
     check_live()
     check_ready()
@@ -42,9 +42,11 @@ def check_live():
     """Check if the vector database is live and display the result."""
     api = WeaviateAPI()
     config = get_config()
-    
-    console.print(f"🔍 Checking if vector database is live at [bold]{config['api_url']}[/bold]...")
-    
+
+    console.print(
+        f"🔍 Checking if vector database is live at [bold]{config['api_url']}[/bold]..."
+    )
+
     try:
         health = api.check_health()
         if health["live"]:
@@ -59,9 +61,11 @@ def check_ready():
     """Check if the vector database is ready and display the result."""
     api = WeaviateAPI()
     config = get_config()
-    
-    console.print(f"🔍 Checking if vector database is ready at [bold]{config['api_url']}[/bold]...")
-    
+
+    console.print(
+        f"🔍 Checking if vector database is ready at [bold]{config['api_url']}[/bold]..."
+    )
+
     try:
         health = api.check_health()
         if health["ready"]:
@@ -77,26 +81,22 @@ def status():
     """Show detailed health status."""
     api = WeaviateAPI()
     config = get_config()
-    
-    console.print(f"🔍 Checking vector database health status at [bold]{config['api_url']}[/bold]...")
-    
+
+    console.print(
+        f"🔍 Checking vector database health status at [bold]{config['api_url']}[/bold]..."
+    )
+
     try:
         health = api.check_health()
-        
+
         table = Table(title="Vector Database Health Status", border_style="green")
         table.add_column("Check", style="cyan")
         table.add_column("Status", style="magenta")
-        
-        table.add_row(
-            "Live",
-            "✅ Yes" if health["live"] else "❌ No"
-        )
-        table.add_row(
-            "Ready",
-            "✅ Yes" if health["ready"] else "❌ No"
-        )
-        
+
+        table.add_row("Live", "✅ Yes" if health["live"] else "❌ No")
+        table.add_row("Ready", "✅ Yes" if health["ready"] else "❌ No")
+
         console.print(table)
-        
+
     except Exception as e:
         console.print(f"❌ Error checking health status: [bold red]{str(e)}[/bold red]")

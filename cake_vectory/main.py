@@ -24,7 +24,9 @@ console = Console()
 # Register command groups
 app.add_typer(health.app, name="health", help="Check vector database health status")
 app.add_typer(schema.app, name="schema", help="Manage vector database schemas")
-app.add_typer(collection.app, name="collection", help="Manage vector database collections")
+app.add_typer(
+    collection.app, name="collection", help="Manage vector database collections"
+)
 app.add_typer(objects.app, name="objects", help="Manage vector database objects")
 app.add_typer(search.app, name="search", help="Search vector database objects")
 
@@ -56,6 +58,7 @@ def callback(
 def version():
     """Show the CLI version."""
     from cake_vectory import __version__
+
     console.print(f"✨ Cake Vectory CLI v{__version__}")
 
 
