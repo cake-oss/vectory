@@ -1,0 +1,32 @@
+Command: python -m cake_vectory.main search hybrid DesigningEcosystemsOfIntelligence 'intelligence' --alpha 0.3 --fusion-type relativeScoreFusion --vector-file cake_vectory/test/test_vector_1024.json --limit 3
+Searching in properties: text
+✅ Loaded vector with 1024 dimensions from file
+🔍 Hybrid searching in collection DesigningEcosystemsOfIntelligence for: intelligence (alpha=0.3, fusion=relativeScoreFusion)...
+DEBUG: Using provided vector for hybrid search
+📊 Found 3 matching objects.
+
+                      Hybrid Search Results for 'intelligence'                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ ID                               ┃ Properties                       ┃ Score  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 12df3d4d-a618-47c7-beaf-73c7ba9… │ chunk_index: 10, full_path:      │ 0.9782 │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles, text: shared   │        │
+│                                  │ intelligence can be described in │        │
+│                                  │ terms of message passing...      │        │
+│ 9e712f45-b8cc-4e4d-9b3a-2f8d7a0… │ chunk_index: 19, full_path:      │ 0.9513 │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles, text: We have  │        │
+│                                  │ noted that intelligence as       │        │
+│                                  │ self-evidencing is inherently    │        │
+│                                  │ perspectival...                  │        │
+│ 8f53a021-e9c7-4b2d-a7c6-1a5d6f3… │ chunk_index: 5, full_path:       │ 0.9127 │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles, text: Shared   │        │
+│                                  │ (or Super) Intelligence. The     │        │
+│                                  │ kind of collective that emerges  │        │
+│                                  │ from coordination...             │        │
+└──────────────────────────────────┴──────────────────────────────────┴────────┘
+
+Note: This example demonstrates hybrid search using custom vectors.
+In production, vectors would be generated from embedding models that match your database's vectorizer.

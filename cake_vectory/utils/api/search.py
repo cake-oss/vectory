@@ -1,8 +1,6 @@
-# SPDX-FileCopyrightText: 2025 Cake AI Technologies, Inc.
-#
-# SPDX-License-Identifier: Apache-2.0
-
-"""Search functionality for the Weaviate API."""
+"""
+Search API client for vector database operations.
+"""
 
 import json
 from typing import Dict, Any, Optional, List, Union
@@ -13,58 +11,65 @@ from cake_vectory.utils.api.objects import ObjectsClient
 
 console = Console()
 
-
-class SearchClient(ObjectsClient):
-    """Client for search operations."""
+class SearchClient(WeaviateClient):
+    """Client for search operations in the vector database."""
     
+    def __init__(self):
+        """Initialize the search client."""
+        super().__init__()
+        self.objects_client = ObjectsClient()
+        
     def has_vectorizer(self, class_name: str) -> bool:
-        """Check if a collection has a vectorizer configured.
+        """Check if a collection has a vectorizer.
         
         Args:
-            class_name: Name of the collection/class
+            class_name: Name of the class to check
             
         Returns:
             bool: True if the collection has a vectorizer, False otherwise
         """
-        try:
-            schemas = self.get_schemas()
-            schema = next((s for s in schemas if s.get("class") == class_name), None)
-            if schema:
-                return schema.get("vectorizer") not in [None, "none"]
-            return False
-        except Exception:
-            return False
+        # Get schema for the class
+        schemas = self.get_schemas()
+        
+        # Check if the class has a vectorizer
+        for schema in schemas:
+            if schema.get("class") == class_name:
+                vectorizer = schema.get("vectorizer", "none")
+                # If vectorizer is "none", it means the collection doesn't have a vectorizer
+                return vectorizer != "none"
+                
+        # If class not found, assume no vectorizer
+        return False
     
     def search_objects(
         self, 
         class_name: str, 
-        query_text: Optional[str] = None,
+        query_text: str,
         limit: int = 10,
         tenant: Optional[str] = None,
-        filter_obj: Optional[Dict[str, Any]] = None,
-        vector: Optional[List[float]] = None
+        filter_obj: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Search for objects using GraphQL.
+        """Search for objects using text search.
         
         Args:
             class_name: Name of the class to search in
-            query_text: Text to search for (will be vectorized)
+            query_text: Text to search for
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
             filter_obj: Optional filter criteria
-            vector: Optional vector to use instead of generating one from query text
             
         Returns:
             Dict: Search results
         """
-        # If vector is provided, we skip the vectorizer check
-        if vector is not None:
-            console.print(f"[dim]DEBUG: Using provided vector for search[/dim]")
+        # Get all objects (since we don't have vectorized search)
+        has_vectorizer = self.has_vectorizer(class_name)
+        console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
+        
+        if has_vectorizer and query_text:
+            # For collections with vectorizers, use the default search
+            # TODO: Implement vectorized search
+            pass
         else:
-            # Check if collection has a vectorizer
-            has_vectorizer = self.has_vectorizer(class_name)
-            console.print(f"[dim]DEBUG: Collection has vectorizer: {has_vectorizer}[/dim]")
-            
             # For collections without vectorizers, we need to use a different approach
             if not has_vectorizer and query_text:
                 console.print(f"[dim]DEBUG: Using direct text search for collection without vectorizer[/dim]")
@@ -73,109 +78,44 @@ class SearchClient(ObjectsClient):
                 console.print(f"[dim]DEBUG: Listing all objects and filtering client-side[/dim]")
                 
                 # Get all objects
-                objects_response = self.get_objects(class_name, limit=100)
+                all_objects = self.objects_client.get_objects(class_name, limit=1000, tenant=tenant)
                 
-                # Filter objects client-side
-                results = {"objects": []}
+                # Simple client-side search implementation
+                matched_objects = []
+                for obj in all_objects.get("data", {}).get("Get", {}).get(class_name, []):
+                    # Convert properties to a single string for searching
+                    object_text = ""
+                    properties = obj.get("text", "")
+                    if properties:
+                        # Simple case-insensitive text matching
+                        if query_text.lower() in properties.lower():
+                            matched_objects.append(obj)
+                    
+                    # Limit results to the specified limit
+                    if len(matched_objects) >= limit:
+                        break
                 
-                if "objects" in objects_response:
-                    for obj in objects_response["objects"]:
-                        # Check if the query text is in any of the object's properties
-                        properties = obj.get("properties", {})
-                        text = properties.get("text", "").lower()
-                        metadata_str = properties.get("metadata_str", "").lower()
-                        
-                        if query_text.lower() in text or query_text.lower() in metadata_str:
-                            # Format object data
-                            formatted_obj = {
-                                "id": obj.get("id", ""),
-                                "properties": properties,
-                                "additional": {
-                                    "score": 1.0  # Default score
-                                }
-                            }
-                            
-                            results["objects"].append(formatted_obj)
-                
-                # Sort results by relevance (simple exact match scoring)
-                results["objects"].sort(
-                    key=lambda obj: (
-                        1 if query_text.lower() in obj["properties"].get("text", "").lower() else 0,
-                        1 if query_text.lower() in obj["properties"].get("metadata_str", "").lower() else 0
-                    ),
-                    reverse=True
-                )
-                
-                # Apply limit
-                results["objects"] = results["objects"][:limit]
-                
-                return results
-        
-        # Construct the appropriate search clause
-        search_clause = ""
-        if vector is not None:
-            # Use nearVector with the provided vector
-            search_clause = f'nearVector: {{ vector: {json.dumps(vector)} }}'
-        elif query_text:
-            # If no vector is provided, use the standard approach based on vectorizer
-            has_vectorizer = self.has_vectorizer(class_name)
-            if has_vectorizer:
-                # Use nearText for collections with vectorizers
-                search_clause = f'nearText: {{ concepts: ["{query_text}"] }}'
-            else:
-                # Use BM25 for collections without vectorizers (fallback, should not reach here)
-                search_clause = f'bm25: {{ query: "{query_text}" }}'
-        
-        graphql_query = {
-            "query": f"""
-            {{
-              Get {{
-                {class_name}(
-                  limit: {limit}
-                  {f'where: {json.dumps(filter_obj)}' if filter_obj else ''}
-                  {search_clause}
-                ) {{
-                  id
-                  properties
-                  _additional {{
-                    score
-                  }}
-                }}
-              }}
-            }}
-            """
-        }
-        
-        # Add tenant if specified
-        if tenant:
-            graphql_query["tenant"] = tenant
-        
-        # Execute GraphQL query
-        response = self.post("graphql", graphql_query)
-        
-        # Extract and format results
-        results = {"objects": []}
-        
-        if response and "data" in response and "Get" in response["data"] and class_name in response["data"]["Get"]:
-            objects = response["data"]["Get"][class_name]
-            
-            for obj in objects:
-                # Format object data
-                formatted_obj = {
-                    "id": obj.get("id"),
-                    "properties": obj.get("properties", {}),
-                    "additional": {
-                        "score": obj.get("_additional", {}).get("score")
+                # Format results in the same structure as Weaviate would return
+                results = {
+                    "data": {
+                        "Get": {
+                            class_name: matched_objects[:limit]
+                        }
                     }
                 }
                 
-                results["objects"].append(formatted_obj)
-        
-        return results
+                # Add score for consistency with vectorized search
+                for obj in results["data"]["Get"][class_name]:
+                    obj["_additional"] = {"score": 1.0}  # Default score
+                
+                return results
+            
+            # No query text, just return all objects up to the limit
+            return self.objects_client.get_objects(class_name, limit=limit, tenant=tenant)
     
     def hybrid_search(
-        self, 
-        class_name: str, 
+        self,
+        class_name: str,
         query: str,
         alpha: float = 0.5,
         limit: int = 10,
@@ -217,6 +157,7 @@ class SearchClient(ObjectsClient):
         
         # Construct GraphQL query with hybrid operator
         # Build hybrid parameters
+        console.print(f"[dim]DEBUG: Setting alpha={alpha} for hybrid search[/dim]")
         hybrid_params = {
             "query": query,
             "alpha": alpha,
@@ -258,9 +199,107 @@ class SearchClient(ObjectsClient):
                   {f'where: {json.dumps(filter_obj)}' if filter_obj else ''}
                   {search_clause}
                 ) {{
-                  id
-                  properties
+                  text
+                  full_path
+                  chunk_index
+                  total_chunks
+                  ts
                   _additional {{
+                    id
+                    score
+                  }}
+                }}
+              }}
+            }}
+            """
+        }
+        
+        # Add tenant if specified
+        if tenant:
+            graphql_query["tenant"] = tenant
+
+        # log the query
+        console.print(f"[dim]DEBUG: Hybrid search query: {json.dumps(graphql_query)}[/dim]")
+        
+        # Execute GraphQL query
+        response = self.objects_client.execute_graphql(graphql_query)
+        
+        # Debug log the response
+        console.print(f"[dim]DEBUG: Hybrid search response: {json.dumps(response, indent=4)}[/dim]")
+        
+        # Format response to match expected format in commands/search.py
+        if response and "data" in response and "Get" in response["data"]:
+            get_data = response["data"]["Get"]
+            if class_name in get_data and get_data[class_name]:
+                # Transform the data to match the expected format
+                objects = []
+                for obj in get_data[class_name]:
+                    # Extract ID from _additional.id
+                    obj_id = obj.get("_additional", {}).get("id", "Unknown")
+                    
+                    # Build properties from other fields
+                    properties = {}
+                    for key, value in obj.items():
+                        if key != "_additional":
+                            properties[key] = value
+                    
+                    # Build additional data including score
+                    additional = {}
+                    if "_additional" in obj and "score" in obj["_additional"]:
+                        additional["score"] = float(obj["_additional"]["score"])
+                    
+                    # Create the transformed object
+                    transformed_obj = {
+                        "id": obj_id,
+                        "properties": properties,
+                        "additional": additional
+                    }
+                    objects.append(transformed_obj)
+                
+                return {"objects": objects}
+        
+        # If we couldn't transform the response, return it as is
+        return response
+    
+    def vector_search(
+        self,
+        class_name: str,
+        vector: List[float],
+        limit: int = 10,
+        tenant: Optional[str] = None,
+        filter_obj: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """Search for objects using vector search.
+        
+        Args:
+            class_name: Name of the class to search in
+            vector: Vector to search for
+            limit: Maximum number of results to return
+            tenant: Optional tenant name for multi-tenant collections
+            filter_obj: Optional filter criteria
+            
+        Returns:
+            Dict: Search results
+        """
+        # Construct GraphQL query with nearVector operator
+        graphql_query = {
+            "query": f"""
+            {{
+              Get {{
+                {class_name}(
+                  limit: {limit}
+                  {f'where: {json.dumps(filter_obj)}' if filter_obj else ''}
+                  nearVector: {{
+                    vector: {json.dumps(vector)}
+                  }}
+                ) {{
+                  text
+                  full_path
+                  chunk_index
+                  total_chunks
+                  ts
+                  _additional {{
+                    id
                     score
                   }}
                 }}
@@ -274,47 +313,27 @@ class SearchClient(ObjectsClient):
             graphql_query["tenant"] = tenant
         
         # Execute GraphQL query
-        response = self.post("graphql", graphql_query)
-        
-        # Extract and format results
-        results = {"objects": []}
-        
-        if response and "data" in response and "Get" in response["data"] and class_name in response["data"]["Get"]:
-            objects = response["data"]["Get"][class_name]
-            
-            for obj in objects:
-                # Format object data
-                formatted_obj = {
-                    "id": obj.get("id"),
-                    "properties": obj.get("properties", {}),
-                    "additional": {
-                        "score": obj.get("_additional", {}).get("score")
-                    }
-                }
-                
-                results["objects"].append(formatted_obj)
-        
-        return results
+        return self.objects_client.execute_graphql(graphql_query)
     
     def filter_objects(
-        self, 
-        class_name: str, 
+        self,
+        class_name: str,
         filter_obj: Dict[str, Any],
         limit: int = 10,
         tenant: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Search for objects using filters only.
+        """Filter objects using a filter object.
         
         Args:
-            class_name: Name of the class to search in
+            class_name: Name of the class to filter
             filter_obj: Filter criteria
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
             
         Returns:
-            Dict: Search results
+            Dict: Filtered results
         """
-        # Check if we're using a vectorizer
+        # Check if collection has a vectorizer
         has_vectorizer = self.has_vectorizer(class_name)
         
         # For collections without vectorizers, use client-side filtering
@@ -322,66 +341,12 @@ class SearchClient(ObjectsClient):
             console.print(f"[dim]DEBUG: Using client-side filtering for collection without vectorizer[/dim]")
             
             # Get all objects
-            objects_response = self.get_objects(class_name, limit=100)
+            all_objects = self.objects_client.get_objects(class_name, limit=1000, tenant=tenant)
             
-            # Filter objects client-side
-            results = {"objects": []}
-            
-            if "objects" in objects_response:
-                for obj in objects_response["objects"]:
-                    # Check if the object matches the filter
-                    properties = obj.get("properties", {})
-                    
-                    # Simple client-side filtering for common operators
-                    matches = False
-                    
-                    # Handle ContainsAny operator
-                    if filter_obj.get("operator") == "ContainsAny" and "path" in filter_obj and "valueText" in filter_obj:
-                        path = filter_obj["path"][0] if isinstance(filter_obj["path"], list) else filter_obj["path"]
-                        value_text = filter_obj["valueText"]
-                        if not isinstance(value_text, list):
-                            value_text = [value_text]
-                        
-                        property_value = properties.get(path, "").lower()
-                        for text in value_text:
-                            if text.lower() in property_value:
-                                matches = True
-                                break
-                    
-                    # Handle Like operator
-                    elif filter_obj.get("operator") == "Like" and "path" in filter_obj and "valueText" in filter_obj:
-                        path = filter_obj["path"][0] if isinstance(filter_obj["path"], list) else filter_obj["path"]
-                        value_text = filter_obj["valueText"]
-                        
-                        # Convert Like pattern to simple contains
-                        # Remove * wildcards for simple contains check
-                        simple_text = value_text.replace("*", "")
-                        
-                        property_value = properties.get(path, "").lower()
-                        if simple_text.lower() in property_value:
-                            matches = True
-                    
-                    # Add more operators as needed
-                    
-                    if matches:
-                        # Format object data
-                        formatted_obj = {
-                            "id": obj.get("id", ""),
-                            "properties": properties,
-                            "additional": {
-                                "score": 1.0  # Default score
-                            }
-                        }
-                        
-                        results["objects"].append(formatted_obj)
-            
-            # Apply limit
-            results["objects"] = results["objects"][:limit]
-            
-            return results
+            # TODO: Implement client-side filtering
+            return all_objects
         
-        # For collections with vectorizers, use the standard approach
-        # Construct GraphQL query
+        # Construct GraphQL query with where operator
         graphql_query = {
             "query": f"""
             {{
@@ -390,9 +355,13 @@ class SearchClient(ObjectsClient):
                   limit: {limit}
                   where: {json.dumps(filter_obj)}
                 ) {{
-                  id
-                  properties
+                  text
+                  full_path
+                  chunk_index
+                  total_chunks
+                  ts
                   _additional {{
+                    id
                     score
                   }}
                 }}
@@ -406,24 +375,35 @@ class SearchClient(ObjectsClient):
             graphql_query["tenant"] = tenant
         
         # Execute GraphQL query
-        response = self.post("graphql", graphql_query)
+        return self.objects_client.execute_graphql(graphql_query)
+    
+    def get_schemas(self) -> List[Dict[str, Any]]:
+        """Get all schemas from the vector database.
         
-        # Extract and format results
-        results = {"objects": []}
-        
-        if response and "data" in response and "Get" in response["data"] and class_name in response["data"]["Get"]:
-            objects = response["data"]["Get"][class_name]
-            
-            for obj in objects:
-                # Format object data
-                formatted_obj = {
-                    "id": obj.get("id"),
-                    "properties": obj.get("properties", {}),
-                    "additional": {
-                        "score": obj.get("_additional", {}).get("score")
-                    }
+        Returns:
+            List[Dict]: List of schemas
+        """
+        # Construct GraphQL query to get schemas
+        graphql_query = {
+            "query": """
+            {
+              Schema {
+                objects {
+                  class
+                  vectorizer
+                  properties {
+                    name
+                    dataType
+                  }
                 }
-                
-                results["objects"].append(formatted_obj)
+              }
+            }
+            """
+        }
         
-        return results
+        # Execute GraphQL query
+        response = self.objects_client.execute_graphql(graphql_query)
+        
+        # Extract schemas from response
+        schemas = response.get("data", {}).get("Schema", {}).get("objects", [])
+        return schemas

@@ -18,9 +18,9 @@ python -m cake_vectory.test.hybrid_search_test --collection CollectionName --que
 
 ### Parameters
 
-- `--collection`: The collection to search in (default: TestCollectionBgem3)
-- `--query`: The search query to use (default: "education research")
-- `--dimensions`: The number of dimensions for the test vector (default: 768)
+- `--collection`: The collection to search in (default: MyCollection)
+- `--query`: The search query to use (default: "intelligence")
+- `--dimensions`: The number of dimensions for the test vector (default: 1024)
 - `--limit`: Maximum number of results to return (default: 3)
 - `--alpha`: Balance between vector and keyword search, 0.0-1.0 (default: 0.7)
 - `--fusion-type`: Type of fusion to use ("rankedFusion" or "relativeScoreFusion", default: "rankedFusion")

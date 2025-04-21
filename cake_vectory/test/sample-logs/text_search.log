@@ -1,0 +1,570 @@
+Command: python -m cake_vectory.main search text DesigningEcosystemsOfIntelligence 'intelligence' --limit 3
+🔍 Searching in collection DesigningEcosystemsOfIntelligence for: 
+intelligence...
+DEBUG: Collection has vectorizer: False
+DEBUG: Using direct text search for collection without vectorizer
+DEBUG: Listing all objects and filtering client-side
+📊 Found 3 matching objects.
+                       Search Results for 'intelligence'                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ ID                               ┃ Properties                       ┃ Score  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━┩
+│ 12df3d4d-a618-47c7-beaf-73c7ba9… │ chunk_index: 10, full_path:      │ 1.0000 │
+│                                  │ /home/brad/Documents/AI/Friston… │        │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles 2212.01354.pdf, │        │
+│                                  │ text:  large monolithic          │        │
+│                                  │ pre-trained models               │        │
+│                                  │ such as BERT. This is not        │        │
+│                                  │ obviously relevant to our        │        │
+│                                  │ interest in (possibly real-time) │        │
+│                                  │ communication and                │        │
+│                                  │ mutual updating among            │        │
+│                                  │ persistent, physically situated  │        │
+│                                  │ AI systems, though it may        │        │
+│                                  │ constitute a form of             │        │
+│                                  │ evolution of populations of AI   │        │
+│                                  │ systems with partially divergent │        │
+│                                  │ learning histories.              │        │
+│                                  │ 14                               │        │
+│                                  │ successively update your         │        │
+│                                  │ posterior belief about latent    │        │
+│                                  │ states. In the second, the       │        │
+│                                  │ collective                       │        │
+│                                  │ assimilation of evidence is      │        │
+│                                  │ parallelized across multiple     │        │
+│                                  │ individuals.                     │        │
+│                                  │ Is the latter equivalent to      │        │
+│                                  │ having one brain with twelve     │        │
+│                                  │ hands? Not quite. The second     │        │
+│                                  │ kind of belief updating rests    │        │
+│                                  │ upon a shared generative model   │        │
+│                                  │ or hypothesis space that enables │        │
+│                                  │ you to assimilate the beliefs of │        │
+│                                  │ another. For example, you share  │        │
+│                                  │ a common notion of a “trunk,”    │        │
+│                                  │ a “leg,” and a “tail”—and        │        │
+│                                  │ crucially, you have access to a  │        │
+│                                  │ shared language for              │        │
+│                                  │ communicating                    │        │
+│                                  │ such concepts.                   │        │
+│                                  │ Sharing a generative model       │        │
+│                                  │ allows each agent to infer the   │        │
+│                                  │ causes of its                    │        │
+│                                  │ sensations and, crucially,       │        │
+│                                  │ disentangle the causes that are  │        │
+│                                  │ unique to the way the world is   │        │
+│                                  │ sampled—e.g., “where I am        │        │
+│                                  │ looking”—and causes that         │        │
+│                                  │ constitute the shared            │        │
+│                                  │ environment                      │        │
+│                                  │ (e.g., “what I am looking at”)   │        │
+│                                  │ [4, 104, 119]. Crucially, any    │        │
+│                                  │ dyad or ensemble of              │        │
+│                                  │ self-evidencing                  │        │
+│                                  │ agents will come to share a      │        │
+│                                  │ generative model (or at least    │        │
+│                                  │ some factors of a generative     │        │
+│                                  │ model)                           │        │
+│                                  │ via their interactions [28] (see │        │
+│                                  │ [120, 121] for numerical         │        │
+│                                  │ experiments in active inference  │        │
+│                                  │ that                             │        │
+│                                  │ illustrate this phenomenon, and  │        │
+│                                  │ Table A.1 for related            │        │
+│                                  │ applications.)                   │        │
+│                                  │ What results is a shared         │        │
+│                                  │ intelligence (i.e., a kind of    │        │
+│                                  │ collective super-intelligence)   │        │
+│                                  │ that                             │        │
+│                                  │ emerges from an ensemble of      │        │
+│                                  │ agents. Heuristically,           │        │
+│                                  │ maximizing model evidence means  │        │
+│                                  │ making                           │        │
+│                                  │ the world as predictable as      │        │
+│                                  │ possible [122, 123]. This is     │        │
+│                                  │ assured if we are both singing   │        │
+│                                  │ from                             │        │
+│                                  │ the same hymn sheet, so to       │        │
+│                                  │ speak—so that I can predict you  │        │
+│                                  │ and you can predict me.          │        │
+│                                  │ Mathematically, this is evinced  │        │
+│                                  │ as a generalized synchrony       │        │
+│                                  │ between the dynamics on our      │        │
+│                                  │ respective statistical manifolds │        │
+│                                  │ [120, 124]. This generalized     │        │
+│                                  │ synchrony (or synchronicity)     │        │
+│                                  │ is special because it unfolds in │        │
+│                                  │ a (shared) belief space, meaning │        │
+│                                  │ it can be read as mutual         │        │
+│                                  │ understanding: i.e., coming to   │        │
+│                                  │ align our beliefs, via a shared  │        │
+│                                  │ language and a shared generative │        │
+│                                  │ model. This sharedness is        │        │
+│                                  │ arguably the basis of culture    │        │
+│                                  │ and underpins the existence of   │        │
+│                                  │ our                              │        │
+│                                  │ civilization. Our challenge,     │        │
+│                                  │ which we take to be a necessary  │        │
+│                                  │ step toward ASI or even AGI,     │        │
+│                                  │ is to expand the sphere of       │        │
+│                                  │ culture to include artificial    │        │
+│                                  │ agents.                          │        │
+│                                  │ 4.2                              │        │
+│                                  │ Belief propagation, graphs, and  │        │
+│                                  │ networks                         │        │
+│                                  │ Operationally, ecosystems of     │        │
+│                                  │ shared intelligence can be       │        │
+│                                  │ described in terms of message    │        │
+│                                  │ passing                          │        │
+│                                  │ on a factor graph [57, 77, 125,  │        │
+│                                  │ 126], a special kind of graph or │        │
+│                                  │ network in which nodes           │        │
+│                                  │ correspond to the factors of a   │        │
+│                                  │ Bayesian belief or probability   │        │
+│                                  │ distribution. Factors are just   │        │
+│                                  │ probabilistic beliefs that one   │        │
+│                                  │ multiplies together to get a     │        │
+│                                  │ joint distribution (i.e., a      │        │
+│                                  │ generative                       │        │
+│                                  │ model). For example, one could   │        │
+│                                  │ factorize beliefs about the      │        │
+│                                  │ latent states of an object into  │        │
+│                                  │ “what” and “where.” These        │        │
+│                                  │ beliefs jointly specify a unique │        │
+│                                  │ object in extrapersonal space;   │        │
+│                                  │ noting that knowing what         │        │
+│                                  │ something is and knowing where   │        │
+│                                  │ it is are largely independent of │        │
+│                                  │ each other [127]. The edges of a │        │
+│                                  │ factor graph correspond to the   │        │
+│                                  │ messages passed among            │        │
+│                                  │ factors that underwrite belief   │        │
+│                                  │ updating. In the implementations │        │
+│                                  │ of active inference that we      │        │
+│                                  │ have been describing, they       │        │
+│                                  │ comprise the requisite           │        │
+│                                  │ sufficient statistics that       │        │
+│                                  │ summarize the                    │        │
+│                                  │ beliefs of other nodes.          │        │
+│                                  │ Technically, this is useful      │        │
+│                                  │ because for any generative model │        │
+│                                  │ there is a dual or comple-       │        │
+│                                  │ mentary factor graph that        │        │
+│                                  │ prescribes precisely the         │        │
+│                                  │ requisite message passing and    │        │
+│                                  │ implicit                         │        │
+│                                  │ computational architecture. In   │        │
+│                                  │ our setting, this architecture   │        │
+│                                  │ has an interesting aspect: we    │        │
+│                                  │ can imagine the nodes of a vast  │        │
+│                                  │ graph partitioned into lots of   │        │
+│                                  │ little subgraphs. Each of these  │        │
+│                                  │ would correspond to an agent     │        │
+│                                  │ updating its beliefs via the     │        │
+│                                  │ propagation of internal          │        │
+│                                  │ messages.                        │        │
+│                                  │ 15                               │        │
+│                                  │ Conversely, external messages    │        │
+│                                  │ would correspond to              │        │
+│                                  │ communication and belief-sharing │        │
+│                                  │ that                             │        │
+│                                  │ rests upon certain factors being │        │
+│                                  │ distributed or duplicated over   │        │
+│                                  │ two or more subgraphs (i.e.,     │        │
+│                                  │ agents or computers). This kind  │        │
+│                                  │ of architecture means that, in   │        │
+│                                  │ principle, any subgraph or       │        │
+│                                  │ agent can see, vicariously,      │        │
+│                                  │ every observable in the world—as │        │
+│                                  │ seen through the eyes of an-     │        │
+│                                  │ other agent. But what is the     │        │
+│                                  │ functional and structural form   │        │
+│                                  │ of the generative model that     │        │
+│                                  │ underwrites such an              │        │
+│                                  │ architecture?                    │        │
+│                                  │ Taking our lead from human       │        │
+│                                  │ communication, the most          │        │
+│                                  │ efficient (minimum description   │        │
+│                                  │ length or minimum-complexity)    │        │
+│                                  │ generative model of worldly      │        │
+│                                  │ states should be somewhat        │        │
+│                                  │ simplified (i., total_chunks:    │        │
+│                                  │ 31, ts:                          │        │
+│                                  │ 2025-04-21T14:28:03.001862Z      │        │
+│ 2460e798-c202-43a6-9ce5-292181a… │ chunk_index: 5, full_path:       │ 1.0000 │
+│                                  │ /home/brad/Documents/AI/Friston… │        │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles 2212.01354.pdf, │        │
+│                                  │ text:  60]; namely,              │        │
+│                                  │ risk, while expected inaccuracy  │        │
+│                                  │ is just the ambiguity inherent   │        │
+│                                  │ in the way we sample data        │        │
+│                                  │ (e.g., resolved by switching the │        │
+│                                  │ lights on in a dark room).       │        │
+│                                  │ Perhaps more interestingly, the  │        │
+│                                  │ ensuing expected free energy can │        │
+│                                  │ be rearranged into expected      │        │
+│                                  │ information gain and expected    │        │
+│                                  │ value, where value is just the   │        │
+│                                  │ (log) preference for an outcome. │        │
+│                                  │ This result captures exactly     │        │
+│                                  │ the dual aspects of Bayes        │        │
+│                                  │ optimality; namely, optimal      │        │
+│                                  │ Bayesian experimental design     │        │
+│                                  │ [61–63]                          │        │
+│                                  │ and decision theory [64]. In     │        │
+│                                  │ essence, it favors choices that  │        │
+│                                  │ ensure the greatest resolution   │        │
+│                                  │ of                               │        │
+│                                  │ uncertainty, under the           │        │
+│                                  │ constraint that preferred        │        │
+│                                  │ outcomes are realized. In other  │        │
+│                                  │ words, it                        │        │
+│                                  │ mandates information and         │        │
+│                                  │ preference-seeking behavior,     │        │
+│                                  │ where one contextualizes the     │        │
+│                                  │ other.                           │        │
+│                                  │ The ensuing curiosity or         │        │
+│                                  │ novelty-seeking thus emerges as  │        │
+│                                  │ an existential imperative [61,   │        │
+│                                  │ 62,                              │        │
+│                                  │ 65–68]—to the extent that one    │        │
+│                                  │ could say that to be intelligent │        │
+│                                  │ is (in part) to be curious, and  │        │
+│                                  │ to balance curiosity against     │        │
+│                                  │ preferences or reward in an      │        │
+│                                  │ optimal fashion.                 │        │
+│                                  │ Crucially, the approach to       │        │
+│                                  │ existence as modeling just       │        │
+│                                  │ outlined can be applied          │        │
+│                                  │ recursively,                     │        │
+│                                  │ in a nested fashion, to systems  │        │
+│                                  │ as well as their components,     │        │
+│                                  │ providing the foundations for    │        │
+│                                  │ mathematical theories of         │        │
+│                                  │ collective intelligence at any   │        │
+│                                  │ scale, from rocks to rockstars.4 │        │
+│                                  │ Indeed,                          │        │
+│                                  │ 3In the context of scientific    │        │
+│                                  │ modeling, a statistical model is │        │
+│                                  │ a mathematical object that       │        │
+│                                  │ encodes the way                  │        │
+│                                  │ that things change, relative to  │        │
+│                                  │ the way that other things        │        │
+│                                  │ change. Formally, the structure  │        │
+│                                  │ that encodes such                │        │
+│                                  │ contingencies is called a joint  │        │
+│                                  │ probability distribution. This   │        │
+│                                  │ is the generative model.         │        │
+│                                  │ 4Even rocks, while not agents    │        │
+│                                  │ per se, track the state of their │        │
+│                                  │ environment: for instance the    │        │
+│                                  │ interior of                      │        │
+│                                  │ a rock “knows” that the          │        │
+│                                  │ environment must be well below   │        │
+│                                  │ the melting point of rock        │        │
+│                                  │ (albeit not under that           │        │
+│                                  │ 7                                │        │
+│                                  │ if existing in a characteristic  │        │
+│                                  │ way just is soliciting or        │        │
+│                                  │ generating evidence for our      │        │
+│                                  │ existence,                       │        │
+│                                  │ then everything that exists can  │        │
+│                                  │ be described as engaging in      │        │
+│                                  │ inference, underwritten by a     │        │
+│                                  │ generative model. Dynamics quite │        │
+│                                  │ generally can then be cast as a  │        │
+│                                  │ kind of belief updating in       │        │
+│                                  │ light of new information: i.e.,  │        │
+│                                  │ changing your mind to            │        │
+│                                  │ accommodate new observations,    │        │
+│                                  │ under                            │        │
+│                                  │ the constraint of minimal        │        │
+│                                  │ complexity.                      │        │
+│                                  │ 3.2                              │        │
+│                                  │ AI designed for belief updating  │        │
+│                                  │ The principles of natural design │        │
+│                                  │ that we’ve reviewed suggest that │        │
+│                                  │ next-generation AI sys-          │        │
+│                                  │ tems must be equipped with       │        │
+│                                  │ explicit beliefs about the state │        │
+│                                  │ of the world; i.e., they should  │        │
+│                                  │ be designed to implement, or     │        │
+│                                  │ embody, a specific perspective—a │        │
+│                                  │ perspective under a gener-       │        │
+│                                  │ ative model entailed by their    │        │
+│                                  │ structure (e.g., phenotypic      │        │
+│                                  │ hardware) and dynamics. (Later,  │        │
+│                                  │ we will suggest that efforts     │        │
+│                                  │ should also be directed towards  │        │
+│                                  │ research and development of      │        │
+│                                  │ communication languages and      │        │
+│                                  │ protocols supporting ecosystems  │        │
+│                                  │ of AI.)                          │        │
+│                                  │ A formal theory of intelligence  │        │
+│                                  │ requires a calculus or mechanics │        │
+│                                  │ for movement in this space       │        │
+│                                  │ of beliefs, which active         │        │
+│                                  │ inference furnishes in the form  │        │
+│                                  │ of Bayesian mechanics [2].       │        │
+│                                  │ Mathe-                           │        │
+│                                  │ matically, belief updating can   │        │
+│                                  │ be expressed as movement in an   │        │
+│                                  │ abstract space—known as a        │        │
+│                                  │ statistical manifold—on which    │        │
+│                                  │ every point corresponds to a     │        │
+│                                  │ probability distribution         │        │
+│                                  │ [70–75].                         │        │
+│                                  │ See Figure 1. This places        │        │
+│                                  │ constraints on the nature of     │        │
+│                                  │ message passing in any physical  │        │
+│                                  │ or                               │        │
+│                                  │ biophysical realization of an AI │        │
+│                                  │ system [57, 76–79]: messages     │        │
+│                                  │ must be the sufficient           │        │
+│                                  │ statistics                       │        │
+│                                  │ or parameters of probability     │        │
+│                                  │ distributions (i.e., Bayesian    │        │
+│                                  │ beliefs). By construction, these │        │
+│                                  │ include measures of uncertainty. │        │
+│                                  │ Any variable drawn from a        │        │
+│                                  │ distribution (e.g., the beliefs  │        │
+│                                  │ held by agents about themselves, │        │
+│                                  │ their environment, and their     │        │
+│                                  │ possible courses of action) are  │        │
+│                                  │ associated with a measure of     │        │
+│                                  │ confidence, known as precision   │        │
+│                                  │ or inverse variance. Thus,       │        │
+│                                  │ intel-                           │        │
+│                                  │ ligent artifacts built according │        │
+│                                  │ to these principles will appear  │        │
+│                                  │ to quantify their uncertainty    │        │
+│                                  │ and act to resolve that          │        │
+│                                  │ uncertainty (as in the           │        │
+│                                  │ deployment of attention in       │        │
+│                                  │ predictive coding                │        │
+│                                  │ schemes [80–84]). Uncertainty    │        │
+│                                  │ quantification is particularly   │        │
+│                                  │ important when assessing the     │        │
+│                                  │ evidence for various models of   │        │
+│                                  │ data, via a process known as     │        │
+│                                  │ structure learning or Bayesian   │        │
+│                                  │ model comparison [85–89].        │        │
+│                                  │ There are several types of       │        │
+│                                  │ uncertainty at play when         │        │
+│                                  │ learning from data. First, there │        │
+│                                  │ may be irreducible noise in the  │        │
+│                                  │ measurement process itself.      │        │
+│                                  │ Examples of such noise include   │        │
+│                                  │ pixel blur in images. Second,    │        │
+│                                  │ the values of the hidden         │        │
+│                                  │ variables being estimated from   │        │
+│                                  │ data                             │        │
+│                                  │ may be ambiguous (e.g., “Is the  │        │
+│                                  │ image I’m viewing of a duck or a │        │
+│                                  │ rabbit?” or “It looks like       │        │
+│                                  │ rain: should I bring an          │        │
+│                                  │ umbrella?”). Third, there may be │        │
+│                                  │ noise in the model of the        │        │
+│                                  │ function                         │        │
+│                                  │ being learned (e.g., “What do    │        │
+│                                  │ rabbits look like? How do hidden │        │
+│                                  │ variables map to data?”).        │        │
+│                                  │ Overcoming and accounting for    │        │
+│                                  │ these different types of         │        │
+│                                  │ uncertainty is essential for     │        │
+│                                  │ learning.                        │        │
+│                                  │ Non-probabilistic approaches to  │        │
+│                                  │ AI encounter these forms of,     │        │
+│                                  │ total_chunks: 31, ts:            │        │
+│                                  │ 2025-04-21T14:28:03.000884Z      │        │
+│ 252379d9-2633-459e-bbb4-e72ec16… │ chunk_index: 8, full_path:       │ 1.0000 │
+│                                  │ /home/brad/Documents/AI/Friston… │        │
+│                                  │ Ecosystems of Intelligence from  │        │
+│                                  │ First Principles 2212.01354.pdf, │        │
+│                                  │ text: zmann machines as products │        │
+│                                  │ of experts [102].                │        │
+│                                  │ 3.4                              │        │
+│                                  │ Shared narratives                │        │
+│                                  │ We have noted that intelligence  │        │
+│                                  │ as self-evidencing is inherently │        │
+│                                  │ perspectival, as it involves     │        │
+│                                  │ actively making sense of and     │        │
+│                                  │ engaging with the world from a   │        │
+│                                  │ specific point of view (i.e.,    │        │
+│                                  │ given a set of beliefs).         │        │
+│                                  │ Importantly, if the origins of   │        │
+│                                  │ intelligence indeed lie in the   │        │
+│                                  │ partitioning                     │        │
+│                                  │ of the universe into subsystems  │        │
+│                                  │ by probabilistic boundaries,     │        │
+│                                  │ then intelligence never arises   │        │
+│                                  │ singly but always exists on      │        │
+│                                  │ either side of such a boundary   │        │
+│                                  │ [103, 104]. The world that one   │        │
+│                                  │ models is almost invariably      │        │
+│                                  │ composed of other intelligent    │        │
+│                                  │ agents that model one in turn.   │        │
+│                                  │ This brings us back to the       │        │
+│                                  │ insight that intelligence must,  │        │
+│                                  │ at some level, be distributed    │        │
+│                                  │ over every agent and over every  │        │
+│                                  │ scale at which agents exist.     │        │
+│                                  │ Active inference is naturally    │        │
+│                                  │ a theory of collective           │        │
+│                                  │ intelligence. There are many     │        │
+│                                  │ foundational issues that arise   │        │
+│                                  │ from this                        │        │
+│                                  │ take on intelligence; ranging    │        │
+│                                  │ from communication to cultural   │        │
+│                                  │ niche construction: from theory  │        │
+│                                  │ of mind to selfhood [103–107].   │        │
+│                                  │ On the active inference account, │        │
+│                                  │ shared goals emerge from         │        │
+│                                  │ shared narratives, which are     │        │
+│                                  │ provided by shared generative    │        │
+│                                  │ models [108]. Furthermore—on     │        │
+│                                  │ the current analysis—certain     │        │
+│                                  │ things should then be curious    │        │
+│                                  │ about each other.                │        │
+│                                  │ The importance of                │        │
+│                                  │ perspective-taking and implicit  │        │
+│                                  │ shared narratives (i.e.,         │        │
+│                                  │ generative mod-                  │        │
+│                                  │ els or frames of reference) is   │        │
+│                                  │ highlighted by the recent        │        │
+│                                  │ excitement about generative AI   │        │
+│                                  │ [8], in                          │        │
+│                                  │ which generative neural networks │        │
+│                                  │ demonstrate the ability to       │        │
+│                                  │ reproduce the kinds of pictures, │        │
+│                                  │ prose, or music that we expose   │        │
+│                                  │ them to. Key to the usage of     │        │
+│                                  │ these systems is a dyadic inter- │        │
+│                                  │ action between artificial and    │        │
+│                                  │ natural intelligence, from the   │        │
+│                                  │ training of deep neural networks │        │
+│                                  │ to the exchange of prompts and   │        │
+│                                  │ generated images with the        │        │
+│                                  │ resulting AI systems, and the    │        │
+│                                  │ subsequent selection and sharing │        │
+│                                  │ of the most apt “reproductions”  │        │
+│                                  │ among generated outputs.5        │        │
+│                                  │ In our view, a truly intelligent │        │
+│                                  │ generative AI would then become  │        │
+│                                  │ curious about us—and             │        │
+│                                  │ want to know what we are likely  │        │
+│                                  │ to select. In short, when AI     │        │
+│                                  │ takes the initiative to ask      │        │
+│                                  │ us questions, we will have moved │        │
+│                                  │ closer to genuine intelligence,  │        │
+│                                  │ as seen through the lens of      │        │
+│                                  │ self-evidencing.                 │        │
+│                                  │ 5The importance of fluid         │        │
+│                                  │ exchange between artificial and  │        │
+│                                  │ human intelligence in this       │        │
+│                                  │ paradigm is evinced              │        │
+│                                  │ by the rapidly growing interest  │        │
+│                                  │ in prompt engineering, i.e., an  │        │
+│                                  │ increasingly self-aware and      │        │
+│                                  │ theory-driven                    │        │
+│                                  │ approach to the role that        │        │
+│                                  │ prompts play in co-creating the  │        │
+│                                  │ outputs of these types of        │        │
+│                                  │ systems [109], which has         │        │
+│                                  │ recently been extended to the    │        │
+│                                  │ optimization of text prompts by  │        │
+│                                  │ distinct AI agents [110].        │        │
+│                                  │ 12                               │        │
+│                                  │ 4                                │        │
+│                                  │ From Babel to binary             │        │
+│                                  │ Human intelligence and language  │        │
+│                                  │ have co-evolved, such that they  │        │
+│                                  │ both scaffold, and are           │        │
+│                                  │ scaffolded by, one another [111, │        │
+│                                  │ 112].                            │        │
+│                                  │ The core functional role of      │        │
+│                                  │ language is to enable            │        │
+│                                  │ communication and shared         │        │
+│                                  │ understanding: language has been │        │
+│                                  │ optimized for sharing with       │        │
+│                                  │ other intelligent creatures (as  │        │
+│                                  │ a language that can be easily    │        │
+│                                  │ passed on reaches further gen-   │        │
+│                                  │ erations). Language has thus     │        │
+│                                  │ facilitated the emergence of     │        │
+│                                  │ more complex interactions and    │        │
+│                                  │ shared customs between agents,   │        │
+│                                  │ which has in turn allowed for    │        │
+│                                  │ the emergence of intensive       │        │
+│                                  │ human collaboration at multiple  │        │
+│                                  │ communal scales [113].           │        │
+│                                  │ Relatedly, language provides a   │        │
+│                                  │ ref-                             │        │
+│                                  │ erence for how to “carve nature  │        │
+│                                  │ at its joints” (e.g., into       │        │
+│                                  │ objects, properties, and         │        │
+│                                  │ events),                         │        │
+│                                  │ facilitating learning about the  │        │
+│                                  │ world and the way it works.      │        │
+│                                  │ Finally, it has allowed humans   │        │
+│                                  │ to build an external store of    │        │
+│                                  │ knowledge far beyond the         │        │
+│                                  │ epistemic capacity of any human  │        │
+│                                  │ individual. Human beings both    │        │
+│                                  │ benefit from—and contribute      │        │
+│                                  │ to—this store of knowledge,      │        │
+│                                  │ which, like language itself, has │        │
+│                                  │ co-evolved with our              │        │
+│                                  │ intelligence.                    │        │
+│                                  │ Across cultures, the earliest    │        │
+│                                  │ recorded narratives of our       │        │
+│                                  │ species have emphasized the as-  │        │
+│                                  │ tounding integrative power of    │        │
+│                                  │ shared communication systems     │        │
+│                                  │ along with their flipside: the   │        │
+│                                  │ discord and disarray wrought by  │        │
+│                                  │ miscommunication and a lack of   │        │
+│                                  │ mutual understanding.            │        │
+│                                  │ This is illustrated potently in  │        │
+│                                  │ the biblical story of the Tower  │        │
+│                                  │ of Babel, which tells of a       │        │
+│                                  │ mighty                           │        │
+│                                  │ civilization that attempted to   │        │
+│                                  │ build a glorious city with a     │        │
+│                                  │ tower that rose to the heavens.  │        │
+│                                  │ These lofty aspirations fell to  │        │
+│                                  │ ruin after a divine disruption   │        │
+│                                  │ that eliminated their common     │        │
+│                                  │ language, shattering it into a   │        │
+│                                  │ thousand uninterpretable         │        │
+│                                  │ dialects. In their confusion and │        │
+│                                  │ mis-                             │        │
+│                                  │ comprehension, they were unable  │        │
+│                                  │ to complete the Tower and were   │        │
+│                                  │ thus scattered across the        │        │
+│                                  │ Earth, forced to survive in the  │        │
+│                                  │ clustered tribes that shared     │        │
+│                                  │ their regional vernacular.       │        │
+│                                  │ Today, humans cope with a        │        │
+│                                  │ “post-Babel” world via a         │        │
+│                                  │ combination of increasing        │        │
+│                                  │ multilin-                        │        │
+│                                  │ gualism, rallying (for better or │        │
+│                                  │ worse) behind hegemonic          │        │
+│                                  │ languages like English, and,     │        │
+│                                  │ recently,                        │        │
+│                                  │ increasingly effective machine   │        │
+│                                  │ translation [114]. Digital       │        │
+│                                  │ computers do share a common or   │        │
+│                                  │ universal machine language       │        │
+│                                  │ (i.e., binary representation).   │        │
+│                                  │ If situations can be represented │        │
+│                                  │ adequately in an appropriate,    │        │
+│                                  │ total_chunks: 31, ts:            │        │
+│                                  │ 2025-04-21T14:28:03.001483Z      │        │
+└──────────────────────────────────┴──────────────────────────────────┴────────┘
+
+To view details of a specific result, use:
+vectory objects get DesigningEcosystemsOfIntelligence <object-id>

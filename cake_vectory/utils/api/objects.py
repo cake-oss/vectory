@@ -13,6 +13,17 @@ import json
 class ObjectsClient(WeaviateClient):
     """Client for object management operations."""
     
+    def execute_graphql(self, query: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a GraphQL query.
+        
+        Args:
+            query: GraphQL query as a dictionary
+            
+        Returns:
+            Dict: Query results
+        """
+        return self.post("graphql", query)
+    
     def get_objects(self, class_name: str, limit: int = 10, offset: int = 0, tenant: Optional[str] = None) -> Dict[str, Any]:
         """Get objects from a class.
         

@@ -1,7 +1,7 @@
 version = 1
 SPDX-PackageName = "cake-vectory"
 SPDX-PackageSupplier = "Cake AI Technologies, Inc."
-SPDX-PackageDownloadLocation = "https://github.com/kflow-ai/cake-vectory"
+SPDX-PackageDownloadLocation = "https://github.com/cake-oss/cake-vectory"
 
 [[annotations]]
 path = [".env.example", ".gitignore", "uv.lock"]
