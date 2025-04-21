@@ -3,7 +3,7 @@ Search API client for vector database operations.
 """
 
 import json
-from typing import Dict, Any, Optional, List, Union
+from typing import Dict, Any, Optional, List, Union, Set
 from rich.console import Console
 
 from cake_vectory.utils.api.client import WeaviateClient
@@ -141,6 +141,7 @@ class SearchClient(WeaviateClient):
         vector: Optional[List[float]] = None,
         fusion_type: str = "rankedFusion",
         properties: Optional[List[str]] = None,
+        fields: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Search for objects using hybrid search (vector + keyword).
 
@@ -154,6 +155,7 @@ class SearchClient(WeaviateClient):
             vector: Optional vector to use instead of generating one from query text
             fusion_type: Type of fusion to use (rankedFusion or relativeScoreFusion)
             properties: Optional list of properties to search in
+            fields: Optional list of fields to return in the results
 
         Returns:
             Dict: Search results
@@ -207,6 +209,41 @@ class SearchClient(WeaviateClient):
         }}
         """
 
+        # Determine which fields to include in the query
+        if fields is None:
+            # Try to detect the schema to find available fields
+            try:
+                available_fields = self._get_available_fields(class_name)
+                fields_to_query = []
+                
+                # Always include text field if it exists
+                if "text" in available_fields:
+                    fields_to_query.append("text")
+                
+                # Include common metadata fields if they exist
+                for field in ["full_path", "chunk_index", "total_chunks", "ts"]:
+                    if field in available_fields:
+                        fields_to_query.append(field)
+                
+                # If no fields were found, default to all available fields
+                if not fields_to_query and available_fields:
+                    fields_to_query = list(available_fields)
+                
+                # If still no fields, use a minimal default set
+                if not fields_to_query:
+                    fields_to_query = ["text"]
+                    
+                console.print(f"[dim]DEBUG: Auto-detected fields for query: {fields_to_query}[/dim]")
+            except Exception as e:
+                console.print(f"[dim]DEBUG: Error detecting schema: {e}, using default fields[/dim]")
+                # Default to the original set of fields
+                fields_to_query = ["text", "full_path", "chunk_index", "total_chunks", "ts"]
+        else:
+            fields_to_query = fields
+        
+        # Construct the fields part of the query
+        fields_str = "\n                  ".join(fields_to_query)
+        
         graphql_query = {
             "query": f"""
             {{
@@ -216,11 +253,7 @@ class SearchClient(WeaviateClient):
                   {f'where: {json.dumps(filter_obj)}' if filter_obj else ''}
                   {search_clause}
                 ) {{
-                  text
-                  full_path
-                  chunk_index
-                  total_chunks
-                  ts
+                  {fields_str}
                   _additional {{
                     id
                     score
@@ -321,6 +354,7 @@ class SearchClient(WeaviateClient):
         limit: int = 10,
         tenant: Optional[str] = None,
         filter_obj: Optional[Dict[str, Any]] = None,
+        fields: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Search for objects using vector search.
 
@@ -330,11 +364,47 @@ class SearchClient(WeaviateClient):
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
             filter_obj: Optional filter criteria
+            fields: Optional list of fields to return in the results
 
         Returns:
             Dict: Search results
         """
         # Construct GraphQL query with nearVector operator
+        # Determine which fields to include in the query
+        if fields is None:
+            # Try to detect the schema to find available fields
+            try:
+                available_fields = self._get_available_fields(class_name)
+                fields_to_query = []
+                
+                # Always include text field if it exists
+                if "text" in available_fields:
+                    fields_to_query.append("text")
+                
+                # Include common metadata fields if they exist
+                for field in ["full_path", "chunk_index", "total_chunks", "ts"]:
+                    if field in available_fields:
+                        fields_to_query.append(field)
+                
+                # If no fields were found, default to all available fields
+                if not fields_to_query and available_fields:
+                    fields_to_query = list(available_fields)
+                
+                # If still no fields, use a minimal default set
+                if not fields_to_query:
+                    fields_to_query = ["text"]
+                    
+                console.print(f"[dim]DEBUG: Auto-detected fields for vector search query: {fields_to_query}[/dim]")
+            except Exception as e:
+                console.print(f"[dim]DEBUG: Error detecting schema: {e}, using default fields[/dim]")
+                # Default to the original set of fields
+                fields_to_query = ["text", "full_path", "chunk_index", "total_chunks", "ts"]
+        else:
+            fields_to_query = fields
+        
+        # Construct the fields part of the query
+        fields_str = "\n                  ".join(fields_to_query)
+        
         graphql_query = {
             "query": f"""
             {{
@@ -346,11 +416,7 @@ class SearchClient(WeaviateClient):
                     vector: {json.dumps(vector)}
                   }}
                 ) {{
-                  text
-                  full_path
-                  chunk_index
-                  total_chunks
-                  ts
+                  {fields_str}
                   _additional {{
                     id
                     score
@@ -374,6 +440,7 @@ class SearchClient(WeaviateClient):
         filter_obj: Dict[str, Any],
         limit: int = 10,
         tenant: Optional[str] = None,
+        fields: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Filter objects using a filter object.
 
@@ -382,6 +449,7 @@ class SearchClient(WeaviateClient):
             filter_obj: Filter criteria
             limit: Maximum number of results to return
             tenant: Optional tenant name for multi-tenant collections
+            fields: Optional list of fields to return in the results
 
         Returns:
             Dict: Filtered results or error information
@@ -404,6 +472,41 @@ class SearchClient(WeaviateClient):
             return all_objects
 
         # Construct GraphQL query with where operator
+        # Determine which fields to include in the query
+        if fields is None:
+            # Try to detect the schema to find available fields
+            try:
+                available_fields = self._get_available_fields(class_name)
+                fields_to_query = []
+                
+                # Always include text field if it exists
+                if "text" in available_fields:
+                    fields_to_query.append("text")
+                
+                # Include common metadata fields if they exist
+                for field in ["full_path", "chunk_index", "total_chunks", "ts"]:
+                    if field in available_fields:
+                        fields_to_query.append(field)
+                
+                # If no fields were found, default to all available fields
+                if not fields_to_query and available_fields:
+                    fields_to_query = list(available_fields)
+                
+                # If still no fields, use a minimal default set
+                if not fields_to_query:
+                    fields_to_query = ["text"]
+                    
+                console.print(f"[dim]DEBUG: Auto-detected fields for filter query: {fields_to_query}[/dim]")
+            except Exception as e:
+                console.print(f"[dim]DEBUG: Error detecting schema: {e}, using default fields[/dim]")
+                # Default to the original set of fields
+                fields_to_query = ["text", "full_path", "chunk_index", "total_chunks", "ts"]
+        else:
+            fields_to_query = fields
+        
+        # Construct the fields part of the query
+        fields_str = "\n                  ".join(fields_to_query)
+        
         graphql_query = {
             "query": f"""
             {{
@@ -412,11 +515,7 @@ class SearchClient(WeaviateClient):
                   limit: {limit}
                   where: {json.dumps(filter_obj)}
                 ) {{
-                  text
-                  full_path
-                  chunk_index
-                  total_chunks
-                  ts
+                  {fields_str}
                   _additional {{
                     id
                     score
@@ -543,3 +642,24 @@ class SearchClient(WeaviateClient):
         # Extract schemas from response
         schemas = response.get("data", {}).get("Schema", {}).get("objects", [])
         return schemas
+        
+    def _get_available_fields(self, class_name: str) -> Set[str]:
+        """Get all available fields for a specific class.
+        
+        Args:
+            class_name: Name of the class to get fields for
+            
+        Returns:
+            Set[str]: Set of available field names
+        """
+        schemas = self.get_schemas()
+        fields = set()
+        
+        for schema in schemas:
+            if schema.get("class") == class_name:
+                properties = schema.get("properties", [])
+                for prop in properties:
+                    fields.add(prop.get("name", ""))
+                break
+                
+        return fields
